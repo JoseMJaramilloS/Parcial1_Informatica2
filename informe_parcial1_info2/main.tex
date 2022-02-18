@@ -47,11 +47,30 @@
 
 \subsection{Conocimientos previos}
 
+El sistema de encriptacion intercambia informacion por medio de la comunicacion serial, que es el proceso de enviar datos de caracter binario un bit a la vez.
+
+Para desencriptar, es necesario paralelizar dicha secuencia de bits que luego seran las entradas de un circuito de logica combinacional encargado de comparar los datos de acuerdo a los parametros de desencriptacion.
+
+Paralelizar no es mas que llevar la secuencia de bits que se desplazan como una sola fila, y transformarla en una columna. De esta forma si se tiene una secuencia serial de n bits, al paralelizar, el resultado es una columna de bits de n filas.
+
+Esta accion de paralelizar la llevará acabo el circuito integrado 74HC595 tambien conocido como Registro de desplazamiento. Un chip con 3 entradas y 8 salidas digitales.
+
+\begin{figure}[!ht]
+\includegraphics[width=5cm]{74HC595.jpg}
+\centering
+\caption{Pines IC 74HC595}
+\end{figure}
+
+\noindent\textbf{Salidas:}\\ 
+\indent Q0-Q7 (pines 1-7 y 15 )\\
+\textbf{Entradas:}\\
+\indent DS: entrada de datos (pin 14)\\
+\indent STCP: entrada de la señal de reloj (pin 12)\\
+\indent SHCP: entrada del pulso para liberar los datos (pin 11)
+
 
 \section{Analisis del problema} \label{analisis}
-Esta sección es para agregar toda la información correspondiente con código, citas, etc.\newline
-Entre los aspectos fundamentales, se debe tener en cuenta realizar la citación respectiva de la información.\newline
-Se muestra como agregar una imagen a nuestro informe.
+
 
 
 \section{Conclusiones} \label{conclusiones}
