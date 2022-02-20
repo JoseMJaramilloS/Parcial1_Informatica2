@@ -53,15 +53,44 @@
 
 \subsection{Conocimientos previos}
 
-A la hora de enfrentarse a un desafío lo más recomendable es dividirlos en varias etapas para trabajarlo más fácilmente, una primera etapa sería realizar una investigación de conceptos y componentes propuestos en el desafío. En este caso es necesario investigar el concepto de transferir información de forma serial y paralela cómo también identificar características, funcionalidades arquitectura, conexiones, alcances y limitaciones del circuito integrado 75HC595, por otro lado, ¿qué es un Arduino? y ¿cómo unirlo al circuito integrado mencionado anteriormente para lograr solucionar el desafío completo?
+A la hora de enfrentarse a un desafío lo más recomendable es dividirlos en varias etapas para trabajarlo más fácilmente, una primera etapa sería realizar una investigación de conceptos y componentes propuestos en el desafío. En este caso es necesario investigar el concepto de transferir información de forma serial y paralela cómo también identificar características, funcionalidades arquitectura, conexiones, alcances y limitaciones del circuito integrado 75HC595, por otro lado, ¿qué es un Arduino? y ¿cómo unirlo al circuito integrado mencionado anteriormente para lograr solucionar el desafío completo?.\\
 
-El sistema de encriptacion intercambia informacion por medio de la comunicacion serial, que es el proceso de enviar datos de caracter binario un bit a la vez.
+Arduino es una plataforma de desarrollo basada en una placa electrónica de hardware libre que incorpora un microcontrolador re-programable y una serie de pines hembra. Estos permiten establecer conexiones entre el microcontrolador y los diferentes sensores y actuadores de una manera muy sencilla (principalmente con cables dupont).\cite{arduinowebsite}\\
+Este dispositivo es el que nos permitirá recibir los datos ingresados por el usuario y realizar la conversion a binario, ademas de funcionar tanto transmisor como receptor en el sistema de encriptacion.\\
 
-Para desencriptar, es necesario paralelizar dicha secuencia de bits que luego seran las entradas de un circuito de logica combinacional encargado de comparar los datos de acuerdo a los parametros de desencriptacion.
+La comunicacion entre arduinos ser realizará de forma serial, que es el proceso de enviar datos de caracter binario un bit a la vez, esto provee la ventaja de mantener la interfaz transmisor-receptor de forma simple y eficiente.\cite{serialsite}\\
+Por lo tanto, para desencriptar, es necesario paralelizar dicha secuencia de bits que luego seran las entradas de un circuito de logica combinacional encargado de comparar los datos de acuerdo a los parametros de desencriptacion.
 
 Paralelizar no es mas que llevar la secuencia de bits que se desplazan como una sola fila, y transformarla en una columna. De esta forma si se tiene una secuencia serial de n bits, al paralelizar, el resultado es una columna de bits de n filas.
 
-Esta accion de paralelizar la llevará acabo el circuito integrado 74HC595 tambien conocido como Registro de desplazamiento. Un chip con 3 entradas y 8 salidas digitales que permitirá, gracias a su diseño, que toda la información que se envíe de manera serial no se muestre en cada una de las salidas, es decir, que la información que se requiera enviar para una determinada salida en particular,se mostrará únicamente ahí y no en las demás, ya que el pulso que se envíe desde la entrada deberá pasar por cada una de las salidas del circuito hasta llegar al destino, pero al contar con un Buffer en cada salida, se consigue controlar las transiciones de modo que solo se observe cuando llegue a la salida destino deseada.
+\begin{figure}[!ht]
+\includegraphics[width=5cm]{paralelizacion.png}
+\centering
+\caption{Ejemplo de paralelización}
+\end{figure}
+
+Esta accion de paralelizar la llevará acabo el circuito integrado 74HC595 tambien conocido como Registro de desplazamiento. Este chip de 16 pines, recibe una secuencia de 8 bits en un solo pin, y los va almacenando en cada una de las salidas para luego ser liberados como 8 señales independientes.\\
+
+Dos definiciones que se deben de tener en cuenta para entender mejor el funcionamiento de todo el sistema son: comunicacion sincrona y comonicacion asincrona.\\
+
+\textbf{Comunicación sincrónica:} Se da cuando el intercambio de mensajes sucede en tiempo real. Requiere que las dos partes (emisor y receptor) estén presentes en el mismo tiempo y espacio, ya sea físico o virtual. Por ejemplo, las llamadas telefónicas, las reuniones en la oficina o las videoconferencias.\\
+
+\textbf{Comunicación asincrónica:} Sucede cuando los mensajes se intercambian sin importar el tiempo. Es decir, que no necesitan la atención inmediata del receptor, quien puede responder en el momento que decida o pueda hacerlo. Estamos hablando de medios como el correo electrónico, foros en línea, chats, mensajes de texto y documentos colaborativos.\cite{relojsite}\\
+
+En este caso, la comunicacion se da de forma sincrona con ayuda de un pulso de reloj.
+En electrónica y especialmente en circuitos digitales síncronos, una señal de reloj es una señal usada para coordinar las acciones de dos o más circuitos, esta señal oscila entre estado alto y bajo, tambien conocido como flanco de subida y de bajada, respectivamente, y gráficamente toma la forma de una onda cuadrada.
+
+\begin{figure}[!ht]
+\includegraphics[width=5cm]{flanco1.jpg}
+\centering
+\caption{Diagrama de tiempo de una señal de reloj}
+\end{figure}
+
+
+de los cuales 3 entradas y 8 salidas digitales permitirán, gracias a su diseño, que toda la información que se envíe de manera serial no se muestre en cada una de las salidas, es decir, que la información que se requiera enviar para una determinada salida en particular, se mostrará únicamente ahí y no en las demás, ya que el pulso que se envíe desde la entrada deberá pasar por cada una de las salidas del circuito hasta llegar al destino, pero al contar con un Buffer en cada salida, se consigue controlar las transiciones de modo que solo se observe cuando llegue a la salida destino deseada.\cite{registershift}\\
+
+
+
 
 
 \begin{figure}[!ht]
@@ -74,8 +103,8 @@ Esta accion de paralelizar la llevará acabo el circuito integrado 74HC595 tambi
 \indent Q0-Q7 (pines 1-7 y 15 )\\
 \textbf{Entradas:}\\
 \indent DS: entrada de datos (pin 14)\\
-\indent STCP: entrada de la señal de reloj (pin 12)\\
-\indent SHCP: entrada del pulso para liberar los datos (pin 11)
+\indent SHCP: entrada de la señal de reloj (pin 11)\\
+\indent STCP: entrada del pulso para liberar los datos (pin 12)
 
 
 \section{Analisis del problema} \label{analisis}
