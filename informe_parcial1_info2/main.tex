@@ -75,20 +75,16 @@ Dos definiciones que se deben de tener en cuenta para entender mejor el funciona
 
 \textbf{Comunicación sincrónica:} Se da cuando el intercambio de mensajes sucede en tiempo real. Requiere que las dos partes (emisor y receptor) estén presentes en el mismo tiempo y espacio, ya sea físico o virtual. Por ejemplo, las llamadas telefónicas, las reuniones en la oficina o las videoconferencias.\\
 
-\textbf{Comunicación asincrónica:} Sucede cuando los mensajes se intercambian sin importar el tiempo. Es decir, que no necesitan la atención inmediata del receptor, quien puede responder en el momento que decida o pueda hacerlo. Estamos hablando de medios como el correo electrónico, foros en línea, chats, mensajes de texto y documentos colaborativos.\cite{relojsite}\\
+\textbf{Comunicación asincrónica:} Sucede cuando los mensajes se intercambian sin importar el tiempo. Es decir, que no necesitan la atención inmediata del receptor, quien puede responder en el momento que decida o pueda hacerlo. Estamos hablando de medios como el correo electrónico, foros en línea, chats, mensajes de texto y documentos colaborativos.\cite{sincrosite}\\
 
 En este caso, la comunicacion se da de forma sincrona con ayuda de un pulso de reloj.
-En electrónica y especialmente en circuitos digitales síncronos, una señal de reloj es una señal usada para coordinar las acciones de dos o más circuitos, esta señal oscila entre estado alto y bajo, tambien conocido como flanco de subida y de bajada, respectivamente, y gráficamente toma la forma de una onda cuadrada.
+En electrónica y especialmente en circuitos digitales síncronos, una señal de reloj es una señal usada para coordinar las acciones de dos o más circuitos, esta señal oscila entre estado alto y bajo, tambien conocido como flanco de subida y de bajada, respectivamente, y gráficamente toma la forma de una onda cuadrada.\cite{relojsite}\\
 
 \begin{figure}[!ht]
 \includegraphics[width=5cm]{flanco1.jpg}
 \centering
 \caption{Diagrama de tiempo de una señal de reloj}
 \end{figure}
-
-
-de los cuales 3 entradas y 8 salidas digitales permitirán, gracias a su diseño, que toda la información que se envíe de manera serial no se muestre en cada una de las salidas, es decir, que la información que se requiera enviar para una determinada salida en particular, se mostrará únicamente ahí y no en las demás, ya que el pulso que se envíe desde la entrada deberá pasar por cada una de las salidas del circuito hasta llegar al destino, pero al contar con un Buffer en cada salida, se consigue controlar las transiciones de modo que solo se observe cuando llegue a la salida destino deseada.\cite{registershift}\\
-
 
 
 
@@ -104,8 +100,12 @@ de los cuales 3 entradas y 8 salidas digitales permitirán, gracias a su diseño
 \textbf{Entradas:}\\
 \indent DS: entrada de datos (pin 14)\\
 \indent SHCP: entrada de la señal de reloj (pin 11)\\
-\indent STCP: entrada del pulso para liberar los datos (pin 12)
+\indent STCP: entrada del pulso para liberar los datos (pin 12)\\
 
+El funcionamiento es el siguiente, la informacion serial entra por el \textbf{DS (pin 14)}, el integrado recibe cada bit cuando ocurre un flanco de subida por el \textbf{SHCP (pin 11)} y lo almacena en la salida de mas baja valor \textbf{Q0 (pin 15)}, a medida que van entrando mas bits, los datos que habian almacenados anteriormente se van desplazando desde \textbf{Q0} hasta \textbf{Q7} hasta completar el byte. Una vez hecho esto, se manda un flanco de subida en \textbf{STCP (pin 12)}, que se encargar de liberar los datos almacenados.
+
+De esta forma el primer bit que entra, queda en la salida \textbf{Q7} y el ultimo en la salida \textbf{Q0}.
+Para ingresar un nuevo byte se debe borrar la informacion del registro, esto se hace mandando un flanco de bajada al pin \textbf{MR (pin 10)} y luego activando la salida del registro (pin 12).
 
 \section{Analisis del problema} \label{analisis}
 
