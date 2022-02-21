@@ -64,7 +64,7 @@ Por lo tanto, para desencriptar, es necesario paralelizar dicha secuencia de bit
 Paralelizar no es mas que llevar la secuencia de bits que se desplazan como una sola fila, y transformarla en una columna. De esta forma si se tiene una secuencia serial de n bits, al paralelizar, el resultado es una columna de bits de n filas.
 
 \begin{figure}[!ht]
-\includegraphics[width=5cm]{paralelizacion.png}
+\includegraphics[width=8cm]{paralelizacion.png}
 \centering
 \caption{Ejemplo de paralelización}
 \end{figure}
@@ -73,21 +73,20 @@ Esta accion de paralelizar la llevará acabo el circuito integrado 74HC595 tambi
 
 Dos definiciones que se deben de tener en cuenta para entender mejor el funcionamiento de todo el sistema son: comunicacion sincrona y comonicacion asincrona.\\
 
-\textbf{Comunicación sincrónica:} Se da cuando el intercambio de mensajes sucede en tiempo real. Requiere que las dos partes (emisor y receptor) estén presentes en el mismo tiempo y espacio, ya sea físico o virtual. Por ejemplo, las llamadas telefónicas, las reuniones en la oficina o las videoconferencias.\\
+\noindent\textbf{Comunicación sincrónica:} Se da cuando el intercambio de mensajes sucede en tiempo real. Requiere que las dos partes (emisor y receptor) estén presentes en el mismo tiempo y espacio, ya sea físico o virtual. Por ejemplo, las llamadas telefónicas, las reuniones en la oficina o las videoconferencias.\\
 
-\textbf{Comunicación asincrónica:} Sucede cuando los mensajes se intercambian sin importar el tiempo. Es decir, que no necesitan la atención inmediata del receptor, quien puede responder en el momento que decida o pueda hacerlo. Estamos hablando de medios como el correo electrónico, foros en línea, chats, mensajes de texto y documentos colaborativos.\cite{sincrosite}\\
+\noindent\textbf{Comunicación asincrónica:} Sucede cuando los mensajes se intercambian sin importar el tiempo. Es decir, que no necesitan la atención inmediata del receptor, quien puede responder en el momento que decida o pueda hacerlo. Estamos hablando de medios como el correo electrónico, foros en línea, chats, mensajes de texto y documentos colaborativos.\cite{sincrosite}\\
 
 En este caso, la comunicacion se da de forma sincrona con ayuda de un pulso de reloj.
 En electrónica y especialmente en circuitos digitales síncronos, una señal de reloj es una señal usada para coordinar las acciones de dos o más circuitos, esta señal oscila entre estado alto y bajo, tambien conocido como flanco de subida y de bajada, respectivamente, y gráficamente toma la forma de una onda cuadrada.\cite{relojsite}\\
 
 \begin{figure}[!ht]
-\includegraphics[width=5cm]{flanco1.jpg}
+\includegraphics[width=8cm]{flanco1.jpg}
 \centering
 \caption{Diagrama de tiempo de una señal de reloj}
 \end{figure}
 
-
-
+A continuacion se muestra la distribucion de pines del circuito integrado 74HC595\\
 
 \begin{figure}[!ht]
 \includegraphics[width=5cm]{74HC595.jpg}
@@ -95,19 +94,70 @@ En electrónica y especialmente en circuitos digitales síncronos, una señal de
 \caption{Pines IC 74HC595}
 \end{figure}
 
+\noindent\textbf{Entradas:}\\
+\indent \textbf{GND} (pin 8): conexion a tierra (0 V)\\
+\indent \textbf{GND} (pin 10): reinicio del registro (activo bajo)\\
+\indent \textbf{SHCP} (pin 11): señal de reloj \\
+\indent \textbf{STCP} (pin 12): pulso para liberar los datos \\
+\indent \textbf{GND} (pin 13): habilitar salida del registro (activo bajo)\\
+\indent \textbf{DS} (pin 14): entrada de datos serial \\
+\indent \textbf{VCC} (pin 16): conexion a fuente de voltaje (5 V)\\
+
 \noindent\textbf{Salidas:}\\ 
-\indent Q0-Q7 (pines 1-7 y 15 )\\
-\textbf{Entradas:}\\
-\indent DS: entrada de datos (pin 14)\\
-\indent SHCP: entrada de la señal de reloj (pin 11)\\
-\indent STCP: entrada del pulso para liberar los datos (pin 12)\\
+\indent \textbf{Q0-Q7} (pines 1-7 y 15 ): salida de datos\\
+\indent \textbf{Q7S} (pin 9): salida de datos serial\\
 
-El funcionamiento es el siguiente, la informacion serial entra por el \textbf{DS (pin 14)}, el integrado recibe cada bit cuando ocurre un flanco de subida por el \textbf{SHCP (pin 11)} y lo almacena en la salida de mas baja valor \textbf{Q0 (pin 15)}, a medida que van entrando mas bits, los datos que habian almacenados anteriormente se van desplazando desde \textbf{Q0} hasta \textbf{Q7} hasta completar el byte. Una vez hecho esto, se manda un flanco de subida en \textbf{STCP (pin 12)}, que se encargar de liberar los datos almacenados.
 
-De esta forma el primer bit que entra, queda en la salida \textbf{Q7} y el ultimo en la salida \textbf{Q0}.
-Para ingresar un nuevo byte se debe borrar la informacion del registro, esto se hace mandando un flanco de bajada al pin \textbf{MR (pin 10)} y luego activando la salida del registro (pin 12).
+El funcionamiento es el siguiente, la informacion serial entra por el \textbf{DS (pin 14)}, el integrado recibe cada bit cuando ocurre un flanco de subida por el \textbf{SHCP (pin 11)} y lo almacena en la salida de mas baja valor \textbf{Q0 (pin 15)}, a medida que van entrando mas bits, los datos que habian almacenados anteriormente se van desplazando desde \textbf{Q0} hasta \textbf{Q7} hasta completar el byte. Una vez hecho esto, se manda un flanco de subida en \textbf{STCP (pin 12)}, que se encargar de liberar los datos almacenados.\\
+
+\noindent De esta forma el primer bit que entra, queda en la salida \textbf{Q7} y el ultimo en la salida \textbf{Q0}.
+Para ingresar un nuevo byte se debe borrar la informacion del registro, esto se hace mandando un flanco de bajada al pin \textbf{MR (pin 10)} y luego activando la salida del registro (pin 12).\cite{74hc595datasheet}
 
 \section{Analisis del problema} \label{analisis}
+
+\subsection{Panorama del problema}
+
+
+El problema consiste en transferir una secuencia de bits encriptados desde un Arduino a otro de forma serial, desencriptandola antes de que llegue al receptor usando logica combinacional y un registro de desplazamiento.\\
+
+Inicialmente la informacion se dará al Arduino en forma de arreglo numerico ingresandola por la consola serial del microcontrolador, este se encargará de realizar la conversion a binario y de generar los pulsos de reloj y reset necesarios para usar en el circuito integrado 74HC595.\\
+
+La salida serial del Arduino, así como las señales de sincronización entraran al 74HC595 que se encargará de paralelizar los datos, entregando 8 salidas diferentes, que a su vez alimentaran las compuertas de un circuito de logica combinacional con una unica salida true o false de acuerdo a una referencia dada.\\
+
+Al Arduino receptor le entrarán el reloj y los datos en forma serial, sin embargo solo admitirá aquella informacion que bajo ciertas condiciones dé como resultado un true en la logica combinacional, en otras palabras, la logica combinacional funcionará como un comparador que le dirá al receptor que informacion es correcta y cual deberá ser descartada, realizanco de esta forma la desencriptacion de los datos.\\
+
+\begin{figure}[!ht]
+\includegraphics[width=10cm]{esquema.PNG}
+\centering
+\caption{Esquema del sistema a implementar. Recuperado de \cite{augusto}}
+\end{figure}
+
+En la siguiente seccion se presentarán a detalle todas las etapas de solución.
+
+\subsection{Etapas de la solucion}
+Para afrontar el problema, se opta por dividirlo en distintas etapas o modulos, de forma que se pueda verificar el correcto funcionamiento de cada uno por separado. Una vez hecho esto se juntan todas las etapas para finalmmente construir el modelo final del sistema.\\
+
+Como primera etapa se revisa el funcionamiento del circuito integrado 74HC595 en el simulador Tinkercad con ayuda de leds, botones y suiches. 
+
+Para la alimentacion se usa una fuente de voltaje de 5 V, se realizan las respectivas conexiones de forma que cada led represente una salida del integrado y por facilidad se realiza el montaje solo para 4 bits. Las funciones de reloj, datos, y liberacion de datos se realizan con suiches y botones.\\
+
+Para ingresar un dato se usa el boton reloj, que permitirá la entrada de un 1 o un 0, de acuerdo a la posicion que tenga el suiche deslizante (la izquierda representa 1 y la derecha 0). Luego de tener 4 datos ingresados se presiona el boton reloj de registro, mostrando los datos ingresados en los leds.
+
+Una vez montado el circuito, se evidencia que, aunque su comportamiento es el esperado, no se permitía ingresar mas información nueva ni borrar la existente, esto se debía a que no se había agregado un boton de reset en el pin 10 del integrado.
+
+\begin{figure}[!ht]
+\includegraphics[width=10cm]{montaje0.PNG}
+\centering
+\caption{Primer montaje con el 74HC595}
+\end{figure}
+
+Despues de haber garantizado el funcionamiento con botones y suiches, se procede a reemplazarlos por las salidas digitales del Arduino, en este caso el reset, el reloj de registro, la entrada de datos y el reloj estan conectados a los pines 4, 5, 6 y 7 respectivamente. Tambien se usan leds adicionales para llevar control de los pulsos que salen del Arduino.
+
+\begin{figure}[!ht]
+\includegraphics[width=10cm]{montaje1.PNG}
+\centering
+\caption{Montaje con 74HC595 y Arduino}
+\end{figure}
 
 
 
