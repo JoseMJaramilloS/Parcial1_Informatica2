@@ -111,7 +111,7 @@ A continuacion se muestra la distribucion de pines del circuito integrado 74HC59
 El funcionamiento es el siguiente, la informacion serial entra por el \textbf{DS (pin 14)}, el integrado recibe cada bit cuando ocurre un flanco de subida por el \textbf{SHCP (pin 11)} y lo almacena en la salida de mas baja valor \textbf{Q0 (pin 15)}, a medida que van entrando mas bits, los datos que habian almacenados anteriormente se van desplazando desde \textbf{Q0} hasta \textbf{Q7} hasta completar el byte. Una vez hecho esto, se manda un flanco de subida en \textbf{STCP (pin 12)}, que se encargar de liberar los datos almacenados.\\
 
 \noindent De esta forma el primer bit que entra, queda en la salida \textbf{Q7} y el ultimo en la salida \textbf{Q0}.
-Para ingresar un nuevo byte se debe borrar la informacion del registro, esto se hace mandando un flanco de bajada al pin \textbf{MR (pin 10)} y luego activando la salida del registro (pin 12).\cite{74hc595datasheet}
+Para ingresar un nuevo byte se debe borrar la informacion del registro, esto se hace mandando un flanco de bajada al pin \textbf{MR (pin 10)} y luego activando la salida del registro \textbf{(pin 12)}.\cite{74hc595datasheet}
 
 \section{Analisis del problema} \label{analisis}
 
@@ -124,7 +124,7 @@ Inicialmente la informacion se dará al Arduino en forma de arreglo numerico ing
 
 La salida serial del Arduino, así como las señales de sincronización entraran al 74HC595 que se encargará de paralelizar los datos, entregando 8 salidas diferentes, que a su vez alimentaran las compuertas de un circuito de logica combinacional con una unica salida true o false de acuerdo a una referencia dada.\\
 
-Al Arduino receptor le entrarán el reloj y los datos en forma serial, sin embargo solo admitirá aquella informacion que bajo ciertas condiciones dé como resultado un true en la logica combinacional, en otras palabras, la logica combinacional funcionará como un comparador que le dirá al receptor que informacion es correcta y cual deberá ser descartada, realizanco de esta forma la desencriptacion de los datos.\\
+Al Arduino receptor le entrarán el reloj y los datos en forma serial, sin embargo solo admitirá aquella informacion que bajo ciertas condiciones dé como resultado un true en la logica combinacional, en otras palabras, la logica combinacional funcionará como un comparador que le dirá al receptor que informacion es correcta y cual deberá ser descartada, realizando de esta forma la desencriptacion de los datos.\\
 
 \begin{figure}[!ht]
 \includegraphics[width=10cm]{esquema.PNG}
@@ -135,7 +135,7 @@ Al Arduino receptor le entrarán el reloj y los datos en forma serial, sin embar
 En la siguiente seccion se presentarán a detalle todas las etapas de solución.
 
 \subsection{Etapas de la solucion}
-Para afrontar el problema, se opta por dividirlo en distintas etapas o modulos, de forma que se pueda verificar el correcto funcionamiento de cada uno por separado. Una vez hecho esto se juntan todas las etapas para finalmmente construir el modelo final del sistema.\\
+Para afrontar el problema, se opta por dividirlo en distintas etapas o modulos, de forma que se pueda verificar el correcto funcionamiento de cada uno por separado. Una vez hecho esto se juntan todas las etapas para posteriormente construir el modelo final del sistema.\\
 
 Como primera etapa se revisa el funcionamiento del circuito integrado 74HC595 en el simulador Tinkercad con ayuda de leds, botones y suiches. 
 
@@ -143,18 +143,18 @@ Para la alimentacion se usa una fuente de voltaje de 5 V, se realizan las respec
 
 Para ingresar un dato se usa el boton reloj, que permitirá la entrada de un 1 o un 0, de acuerdo a la posicion que tenga el suiche deslizante (la izquierda representa 1 y la derecha 0). Luego de tener 4 datos ingresados se presiona el boton reloj de registro, mostrando los datos ingresados en los leds.
 
-Una vez montado el circuito, se evidencia que, aunque su comportamiento es el esperado, no se permitía ingresar mas información nueva ni borrar la existente, esto se debía a que no se había agregado un boton de reset en el pin 10 del integrado.
+Una vez montado el circuito, se evidencia que, aunque su comportamiento es el esperado, no se permitía ingresar mas información nueva ni borrar la existente, esto se debía a que no se había agregado un boton de reset en el pin 10 del integrado. Esta correccion ya se muestra en el circuito de la Figura 5.
 
-\begin{figure}[!ht]
-\includegraphics[width=10cm]{montaje0.PNG}
+\begin{figure}[h]
+\includegraphics[width=7cm]{montaje0.PNG}
 \centering
 \caption{Primer montaje con el 74HC595}
-\end{figure}
+\end{figure}\\
 
-Despues de haber garantizado el funcionamiento con botones y suiches, se procede a reemplazarlos por las salidas digitales del Arduino, en este caso el reset, el reloj de registro, la entrada de datos y el reloj estan conectados a los pines 4, 5, 6 y 7 respectivamente. Tambien se usan leds adicionales para llevar control de los pulsos que salen del Arduino.
+Despues de haber garantizado el funcionamiento con botones y suiches, se procede a reemplazarlos por las salidas digitales del Arduino, en este caso el reset, el reloj de registro, la entrada de datos y el reloj estan conectados a los pines 4, 5, 6 y 7 respectivamente. Tambien se usan leds adicionales para llevar control de los pulsos que salen del Arduino como puede verse en la Figura 6.
 
 \begin{figure}[!ht]
-\includegraphics[width=10cm]{montaje1.PNG}
+\includegraphics[width=7cm]{montaje1.PNG}
 \centering
 \caption{Montaje con 74HC595 y Arduino}
 \end{figure}
