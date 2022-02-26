@@ -135,28 +135,46 @@ Al Arduino receptor le entrarán el reloj y los datos en forma serial, sin embar
 En la siguiente seccion se presentarán a detalle todas las etapas de solución.
 
 \subsection{Etapas de la solucion}
+
 Para afrontar el problema, se opta por dividirlo en distintas etapas o modulos, de forma que se pueda verificar el correcto funcionamiento de cada uno por separado. Una vez hecho esto se juntan todas las etapas para posteriormente construir el modelo final del sistema.\\
+\subsubsection{Circuito con el integrado 74HC595}
 
 Como primera etapa se revisa el funcionamiento del circuito integrado 74HC595 en el simulador Tinkercad con ayuda de leds, botones y suiches. 
 
 Para la alimentacion se usa una fuente de voltaje de 5 V, se realizan las respectivas conexiones de forma que cada led represente una salida del integrado y por facilidad se realiza el montaje solo para 4 bits. Las funciones de reloj, datos, y liberacion de datos se realizan con suiches y botones.\\
 
-Para ingresar un dato se usa el boton reloj, que permitirá la entrada de un 1 o un 0, de acuerdo a la posicion que tenga el suiche deslizante (la izquierda representa 1 y la derecha 0). Luego de tener 4 datos ingresados se presiona el boton reloj de registro, mostrando los datos ingresados en los leds.
+Para ingresar un dato se usa el boton reloj, que permitirá la entrada de un 1 o un 0, de acuerdo a la posicion que tenga el suiche deslizante (la izquierda representa 1 y la derecha 0). Luego de tener 4 datos ingresados se presiona el boton reloj de registro, mostrando los datos ingresados en los leds.\\
 
-Una vez montado el circuito, se evidencia que, aunque su comportamiento es el esperado, no se permitía ingresar mas información nueva ni borrar la existente, esto se debía a que no se había agregado un boton de reset en el pin 10 del integrado. Esta correccion ya se muestra en el circuito de la Figura 5.
+Una vez montado el circuito, se evidencia que, aunque su comportamiento es el esperado, no se permitía ingresar mas información nueva ni borrar la existente, esto se debía a que no se había agregado un boton de reset en el pin 10 del integrado. Esta correccion ya se muestra en el circuito de la Figura 5.\\
 
-\begin{figure}[h]
+\begin{figure}[ht]
 \includegraphics[width=7cm]{montaje0.PNG}
 \centering
 \caption{Primer montaje con el 74HC595}
-\end{figure}\\
+\end{figure}
 
 Despues de haber garantizado el funcionamiento con botones y suiches, se procede a reemplazarlos por las salidas digitales del Arduino, en este caso el reset, el reloj de registro, la entrada de datos y el reloj estan conectados a los pines 4, 5, 6 y 7 respectivamente. Tambien se usan leds adicionales para llevar control de los pulsos que salen del Arduino como puede verse en la Figura 6.
 
-\begin{figure}[!ht]
+El pulso de reloj principal es implementado internamente en el Arduino con ayuda de un ciclo y delays. Los datos a transmitir provienen de un arreglo de unos y ceros que es recorrido con un for y cuyo valor solo es liberado  cuando ocurre un flanco de subida del reloj. El reloj de registros tendrá un periodo de 4 veces el periodo del reloj principal, pues para este caso se está trabajando solo con 4 bits.
+
+
+\begin{figure}[!ht] 
 \includegraphics[width=7cm]{montaje1.PNG}
 \centering
 \caption{Montaje con 74HC595 y Arduino}
+\end{figure}
+
+\subsubsection{Comunicacion serial entre arduinos}
+Para enviar la informacion se usan dos pines digitales en cada Arduino, configurándolos como pines de entradas y salida para el receptor y transmisor respectivamente. Uno de los pines es para el reloj principal y el otro para los datos en forma serial. Los pulsos de reloj son generados internamente en el Arduino transmisor con ayuda de un ciclo y diferentes delay.\\
+
+En el Arduino receptor se usa un condicional que detecte si hay un flanco de subida en el reloj principal, y si lo hay se imprime en la consola serial 1 o 0 segun el valor que haya en el pin de datos, ya sea un HIGH o un LOW. La impresion por consola es solo una medida de controlar el correcto funcionamiento del montaje.
+
+Durante la implementación se presentó la dificultad de que el receptor tomaba varias veces el mismo valor debido a que la función loop se repite mucho más rápido de lo que cambian el reloj. Para solucionarlo, se redujo drásticamente el tiempo en alto del reloj hasta 0.5 ms, de forma que el receptor pueda recibir solo un dato a la vez y no varias veces el mismo dato generando errores. El montaje se muestra en la Figura 7.
+
+\begin{figure}[!ht] 
+\includegraphics[width=7cm]{montajeSerial.PNG}
+\centering
+\caption{Montaje de Arduinos en comunicacion serial}
 \end{figure}
 
 

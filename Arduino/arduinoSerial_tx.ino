@@ -1,5 +1,4 @@
-// C++ code
-//
+
 void setup()
 {
   for(int i=4;i<8;i++){
@@ -21,8 +20,9 @@ void loop()
     digitalWrite(7, HIGH);
     if((i+1)%4==0) digitalWrite(5, HIGH);//debe ser multiplo de la particion
     
-    delay(450);
+    delay(0.5); //un tiempo muy bajo de reloj, garantiza que solo se tome un dato en el otro arduino
     digitalWrite(7, LOW);
+    delay(449.5);
     digitalWrite(5, LOW);
     digitalWrite(6, LOW);
     delay(500); 
