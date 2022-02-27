@@ -167,7 +167,7 @@ El pulso de reloj principal es implementado internamente en el Arduino con ayuda
 \subsubsection{Comunicacion serial entre arduinos}
 Para enviar la informacion se usan dos pines digitales en cada Arduino, configurándolos como pines de entradas y salida para el receptor y transmisor respectivamente. Uno de los pines es para el reloj principal y el otro para los datos en forma serial. Los pulsos de reloj son generados internamente en el Arduino transmisor con ayuda de un ciclo y diferentes delay.\\
 
-En el Arduino receptor se usa un condicional que detecte si hay un flanco de subida en el reloj principal, y si lo hay se imprime en la consola serial 1 o 0 segun el valor que haya en el pin de datos, ya sea un HIGH o un LOW. La impresion por consola es solo una medida de controlar el correcto funcionamiento del montaje.
+En el Arduino receptor se usa un condicional que detecte si hay un flanco de subida en el reloj principal, y si lo hay se imprime en la consola serial 1 o 0 segun el valor que haya en el pin de datos, ya sea un HIGH o un LOW. La impresion por consola es solo una medida de controlar el correcto funcionamiento del montaje, posteriormente los datos se usaran con otro objetivo como convertirlos a decimal.
 
 Durante la implementación se presentó la dificultad de que el receptor tomaba varias veces el mismo valor debido a que la función loop se repite mucho más rápido de lo que cambian el reloj. Para solucionarlo, se redujo drásticamente el tiempo en alto del reloj hasta 0.5 ms, de forma que el receptor pueda recibir solo un dato a la vez y no varias veces el mismo dato generando errores. El montaje se muestra en la Figura 7.
 
@@ -177,10 +177,56 @@ Durante la implementación se presentó la dificultad de que el receptor tomaba 
 \caption{Montaje de Arduinos en comunicacion serial}
 \end{figure}
 
+\subsubsection{Módulo de desencriptación}
+El modulo de desencriptacion consiste en un circuito de logica combinacional que compara los 8 bits que salen del 74HC595 con los 8 bits del numero de referencia que en nuestro caso es el \textbf{127}.\\
 
+Para comparar bit a bit se requieren 8 compuertas XOR, en una de las entradas entra el bit que sale del integrado, y en la otra entrada el bit correspondiente al numero de referencia. Segun la tabla de verdad de la compuerta XOR, mostrada en la Figura 8, cuando ambas entradas son iguales, la salida es cero, por tanto se usan negadoras para que cuando esto ocurra se tenga un valor true en la salida, de esta forma se requieren 8 compuertas NOT. Las 8 salidas de las negadoras alimentan la entrada de un sistema de compuertas AND cuyo objetivo es comparar que todos las salidas de las NOT sean 1, es decir, que todos los bits sean iguales, por lo que se necesitan 7 compuertas AND.\\
+
+
+\begin{figure}[!ht] 
+\includegraphics[width=10cm]{compuertas.png}
+\centering
+\caption{Tablas de verdad de las compuertas XOR, NOR, AND y NOT}
+\end{figure}
+
+Dentro del catalogo de integrados de compuertas logicas disponibles en el aplicativo TinkerCAD tenemos los siguientes:
+\begin{itemize}
+    \item 74HC21: dos compuertas AND de 4 entradas
+    \item 74HC08: 4 compuertas AND de dos entradas
+    \item 74HC86: 4 compuertas XOR de dos entradas
+    \item 74HC02: 4 compuertas NOR de dos entradas
+    \item 74HC04: 6 compuertas negadoras\\
+\end{itemize}
+
+De esta forma, y considerando integrados que solo dispongan de compuertas de dos entradas se necesitarian alrededor de 6 integrado en total para realizar el montaje planteado en la Figura 9.
+
+\begin{figure}[!h] 
+\includegraphics[width=8cm]{logica1.png}
+\centering
+\caption{Circuito de logica combinacional propuesto}
+\end{figure}
+
+Analizando un poco mejor el circuito y usando algebra de bool, se observa que la expresion corresponidente a las AND cuyas entradas son negadas, puede transformarse aplicando la ley de DeMorgan así: $\bar{A}\bar{B} = \overline{A+B}$.
+
+Con esto estamos sustitiyendo la AND y las negadoras, por una sola compuerta NOR y reduciendo el numero de integrados de 6 a 4. Tambien se puede usar una compuerta AND de 4 entradas para reemplazar las 3 AND de 2 entradas en la parte final del circuito. Aunque esto no reduce los integrados a usar, sí facilita la conexion de los chips durante el montaje. Esta simplifcicacion se muestra en la Figura 10.
+
+\begin{figure}[!hb] 
+\includegraphics[width=8cm]{logica2.png}
+\centering
+\caption{Circuito de logica combinacional simplificado}
+\end{figure}
+
+Con el esquema planteado, se monta el circuito en TinkerCAD, usando una fuente de alimentacion de 5 V, DIP switchs para simular las entradas, los integrados de compuertas logicas \textbf{74HC86 (XOR)}, \textbf{74HC02 (NOR)}, \textbf{74HC21 (AND)} y un diodo LED que se enciende cuando ambos numeros son iguales.\\
+
+\begin{figure}[!ht] 
+\includegraphics[width=10cm]{montajeCompuertas.PNG}
+\centering
+\caption{Implementacion del circuito de logica combinacional simplificado}
+\end{figure}
+
+Para la construccion final, el DIP switch "Numero que sale del registro" será reemplazado por las 8 salidas del 74HC595 (Registro de desplazamiento), mientras que el otro DIP switch no cambiará, y siempre tendrá el numero de referencia 127, o cualquier otro pedido durante su ejecucion.
 
 \section{Conclusiones} \label{conclusiones}
-
 
 \bibliographystyle{IEEEtran}
 \bibliography{references}
