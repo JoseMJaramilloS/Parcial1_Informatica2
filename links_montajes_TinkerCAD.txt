@@ -1,4 +1,16 @@
-Funcionamiento 74HC595: https://www.tinkercad.com/things/972CovdxS2r-funcionamiento-74hc595/editel?sharecode=P2i-a26h6cLq8R5Av_Xn6JJW7oMZX9gkJzv8x8KNZvM
-Funcionamiento 74HC595 con Arduino: https://www.tinkercad.com/things/hTYZI0CJ0Hk-funcionamiento-74hc595-arduino/editel?sharecode=jw1UuolBRoQfCCVTdGkixNVWRwDocFj7BpnH54DHYXU
-Serial entre Arduinos: https://www.tinkercad.com/things/ewr6QpYJa7c-copy-of-funcionamiento-74hc595-arduino/editel?sharecode=u9Whxr7SKScaVT4hAE7CEcuyUKsg2E-hPBWvHMrJDCA
-Desencriptacion: https://www.tinkercad.com/things/eUE50KpbXaV-desencriptacion-parcial1-info2/editel?sharecode=xC27rORkQJuzSqw_GFVCjFp-AN9h9FcxWx9yo8aBWus
+Funcionamiento 74HC595: 
+	EDITABLE: https://www.tinkercad.com/things/972CovdxS2r-funcionamiento-74hc595/editel?sharecode=P2i-a26h6cLq8R5Av_Xn6JJW7oMZX9gkJzv8x8KNZvM
+	COMPARTIDO: https://www.tinkercad.com/things/972CovdxS2r
+
+Funcionamiento 74HC595 con Arduino 
+	EDITABLE: https://www.tinkercad.com/things/hTYZI0CJ0Hk-funcionamiento-74hc595-arduino/editel?sharecode=jw1UuolBRoQfCCVTdGkixNVWRwDocFj7BpnH54DHYXU
+	COMPARTIDO: https://www.tinkercad.com/things/hTYZI0CJ0Hk
+
+Serial entre Arduinos: 
+	EDITABLE: https://www.tinkercad.com/things/ewr6QpYJa7c-copy-of-funcionamiento-74hc595-arduino/editel?sharecode=u9Whxr7SKScaVT4hAE7CEcuyUKsg2E-hPBWvHMrJDCA
+	COMPARTIDO: https://www.tinkercad.com/things/ewr6QpYJa7c
+
+Desencriptacion: 
+	EDITABLE: https://www.tinkercad.com/things/eUE50KpbXaV-desencriptacion-parcial1-info2/editel?sharecode=xC27rORkQJuzSqw_GFVCjFp-AN9h9FcxWx9yo8aBWus
+	COMPARTIDO: https://www.tinkercad.com/things/eUE50KpbXaV
+

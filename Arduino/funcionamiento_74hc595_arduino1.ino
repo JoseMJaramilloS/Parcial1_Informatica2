@@ -6,13 +6,13 @@ void setup()
   	pinMode(i, OUTPUT);
   }  
 }
-int binario[8]={0,0,0,1,0,1,1,0};
+int binario[16]={0,0,0,1,0,1,1,0,0,1,1,0,1,0,0,0};
 void loop()
 {
   digitalWrite(4, LOW);
   digitalWrite(4, HIGH);
   digitalWrite(5, LOW);
-  for(int i=0;i<8;i++){//debe recorrer todo el arreglo
+  for(int i=0;i<16;i++){//debe recorrer todo el arreglo
     
     digitalWrite(5, LOW);
     if(binario[i]==1) digitalWrite(6, HIGH);
@@ -28,5 +28,4 @@ void loop()
     delay(500); 
     
   }
-  
 }

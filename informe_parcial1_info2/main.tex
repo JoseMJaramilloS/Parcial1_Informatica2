@@ -216,7 +216,7 @@ Codigo del Arduino con 74HC595:
 \begin{lstlisting}[style=C++]
 void setup()
 {
-  for(int i=4;i<16;i++){
+  for(int i=4;i<8;i++){
   	pinMode(i, OUTPUT);
   }  
 }
@@ -243,9 +243,10 @@ void loop()
 \end{lstlisting}
 
 \subsubsection{Comunicacion serial entre arduinos}
-Para enviar la informacion se usan dos pines digitales en cada Arduino, configurándolos como pines de entradas y salida para el receptor y transmisor respectivamente. Uno de los pines es para el reloj principal y el otro para los datos en forma serial. Los pulsos de reloj son generados internamente en el Arduino transmisor con ayuda de un ciclo y diferentes delay.\\
+Para enviar la informacion se usan dos pines digitales en cada Arduino, configurándolos como pines de entradas y salida para el receptor y transmisor respectivamente. Uno de los pines es para el reloj principal (pin 2 en el Arduino de la derecha)  y el otro para los datos en forma serial (pin 3 en el Arduino de la derecha). Los pulsos de reloj son generados internamente en el Arduino transmisor con ayuda de un ciclo y diferentes delay como se muestra en el codigo del Arduino 1 (TX-Izquierdo).
+Se usa una variable global denominada tiempo que permite configurar el periodo de reloj y velocidad de transmision de los datos.\\
 
-En el Arduino receptor se usa un condicional que detecte si hay un flanco de subida en el reloj principal, y si lo hay se imprime en la consola serial 1 o 0 segun el valor que haya en el pin de datos, ya sea un HIGH o un LOW. La impresion por consola es solo una medida de controlar el correcto funcionamiento del montaje, posteriormente los datos se usaran con otro objetivo como convertirlos a decimal.
+En el Arduino receptor se usa un condicional que detecte si hay un flanco de subida en el reloj principal, y si lo hay se imprime en la consola serial 1 o 0 segun el valor que haya en el pin de datos, ya sea un HIGH o un LOW. La impresion por consola es solo una medida de controlar el correcto funcionamiento del montaje, posteriormente los datos se usaran con otro objetivo como convertirlos a decimal.\\
 
 Durante la implementación se presentó la dificultad de que el receptor tomaba varias veces el mismo valor debido a que la función loop se repite mucho más rápido de lo que cambian el reloj. Para solucionarlo, se redujo drásticamente el tiempo en alto del reloj hasta 0.5 ms, de forma que el receptor pueda recibir solo un dato a la vez y no varias veces el mismo dato generando errores. El montaje se muestra en la Figura 7.
 
@@ -259,6 +260,9 @@ Durante la implementación se presentó la dificultad de que el receptor tomaba 
 Codigo del Arduino 1 (TX-Izquierdo):
 
 \begin{lstlisting}[style=C++]
+void setup()
+{
+  for(int i=4;i<8;i++){
   	pinMode(i, OUTPUT);
   }  
 }
@@ -292,7 +296,7 @@ Codigo del Arduino 2 (RX-Derecho):
 \begin{lstlisting}[style=C++]
 void setup()
 {
-  for(int i=2;i<3;i++){
+  for(int i=2;i<4;i++){
   	pinMode(i, INPUT);
   } 
   Serial.begin(9600);
@@ -341,7 +345,7 @@ De esta forma, y considerando integrados que solo dispongan de compuertas de dos
 
 Analizando un poco mejor el circuito y usando algebra de bool, se observa que la expresion corresponidente a las AND cuyas entradas son negadas, puede transformarse aplicando la ley de DeMorgan así: $\bar{A}\bar{B} = \overline{A+B}$.
 
-Con esto estamos sustitiyendo la AND y las negadoras, por una sola compuerta NOR y reduciendo el numero de integrados de 6 a 4. Tambien se puede usar una compuerta AND de 4 entradas para reemplazar las 3 AND de 2 entradas en la parte final del circuito. Aunque esto no reduce los integrados a usar, sí facilita la conexion de los chips durante el montaje. Esta simplifcicacion se muestra en la Figura 10.
+Con esto estamos sustitiyendo la AND y las negadoras, por una sola compuerta NOR y reduciendo el numero de integrados de 6 a 4. Tambien se puede usar una compuerta AND de 4 entradas para reemplazar las 3 AND de 2 entradas en la parte final del circuito. Aunque esto no reduce los integrados a usar, sí facilita la conexion de los chips durante el montaje. Esta simplificacion se muestra en la Figura 10.
 
 \begin{figure}[!hb] 
 \includegraphics[width=8cm]{logica2.png}
@@ -358,6 +362,57 @@ Con el esquema planteado, se monta el circuito en TinkerCAD, usando una fuente d
 \end{figure}
 
 Para la construccion final, el DIP switch "Numero que sale del registro" será reemplazado por las 8 salidas del 74HC595 (Registro de desplazamiento), mientras que el otro DIP switch no cambiará, y siempre tendrá el numero de referencia 127, o cualquier otro pedido durante su ejecucion.
+\subsubsection{Conversion de entero a binario en Arduino}
+Debido a que en el problema, se entrega un arreglo de enteros es necesario elaborar un programa que realice la conversion de decimal a binario. Inicialmente la implementacion se realiza en QT, para apoyarse del depurador y realizar pruebas. Posteriormente se lleva el codigo al Arduino transmisor. El codigo se encuentra a continuacion:
+
+\noindent
+
+
+\begin{lstlisting}[style=C++]
+#include <iostream>
+using namespace std;
+
+//Programa que convierte un arreglo de enteros a un arreglo binario
+int main()
+{
+    int tam=11, n, num[11]={49,67,13,240,50,89,17,93,170,127,28};
+    int *bin = new int[8*tam];
+    for (int i=0,test=1;i<tam;i++, test++) {
+        n=num[i];
+        for (int j=7,k=8*test-1;j>-1;j--) {
+            if (n%2==0) {
+                bin[k]=0; //se empieza a llenar desde la posicion final de la particion de 8 bits
+            }
+            else{
+                bin[k]=1;
+            }
+            n/=2;
+            k--;
+        }
+    }
+    for (int i=0;i<tam*8;i++) {//Imprime el arreglo (CONTROL)
+        cout<<*(bin+i);
+        if((i+1)%8==0) cout<<"|";//Separador de bits
+    }
+    cout<<endl;
+    delete[] bin;
+    return 0;
+}
+\end{lstlisting}
+
+El codigo consiste en un for que recorre el arreglo de enteros, y a cada elemento le realiza la division sucesiva por dos para obtener la conversion a binario. El arreglo de bits se llena de forma tal que el bit mas significativo quede a la derecha de cada particion de 8 bits.
+En la parte final se tiene un ciclo que imprime el arreglo para comprobar que todo está correcto.
+
+\subsubsection{Ensamble de los modulos anteriores}
+Una vez garantizado el correcto funcionamiento de cada modulo por separado, se procede a ensamblarlos y realizar las conexiones respectivas. Primero se reemplazo el DIP switch que simulaba la salida de los datos del integrado en el modulo de encriptacion, por las salidas reales del 74HC595. Luego se conectaron ambos Arduinos y se cargaron los codigos para permitir la comunicacion serial. Se optó por conservar algunos montajes de LED como elementos de control. El montaje se puede apreciar en la Figura 12.
+
+\begin{figure}[!ht] 
+\includegraphics[width=12cm]{esquemaEnsamble.PNG}
+\centering
+\caption{Ensamble de los modulos anteriores}
+\end{figure}
+
+
 
 \section{Conclusiones} \label{conclusiones}
 
