@@ -14,3 +14,6 @@ Desencriptacion:
 	EDITABLE: https://www.tinkercad.com/things/eUE50KpbXaV-desencriptacion-parcial1-info2/editel?sharecode=xC27rORkQJuzSqw_GFVCjFp-AN9h9FcxWx9yo8aBWus
 	COMPARTIDO: https://www.tinkercad.com/things/eUE50KpbXaV
 
+Montaje completo:
+	EDITABLE: https://www.tinkercad.com/things/6WFPLIUvXBK-copy-of-serial74hc595/editel?sharecode=x7Smvfxi5kMVeaP9JWHW0hrUpRQ-QwmJUDOO8q-LXno
+	COMPARTDO: https://www.tinkercad.com/things/6WFPLIUvXBK
