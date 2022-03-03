@@ -1,0 +1,17 @@
+Funcionamiento 74HC595: 
+	COMPARTIDO: https://www.tinkercad.com/things/972CovdxS2r
+
+Funcionamiento 74HC595 con Arduino 
+	COMPARTIDO: https://www.tinkercad.com/things/hTYZI0CJ0Hk
+
+Serial entre Arduinos: 
+	COMPARTIDO: https://www.tinkercad.com/things/ewr6QpYJa7c
+
+Desencriptacion: 
+	COMPARTIDO: https://www.tinkercad.com/things/eUE50KpbXaV
+
+Circuito LCD:
+	COMPARTIDO: https://www.tinkercad.com/things/c7RIrkOcizG
+
+Montaje completo:
+	COMPARTIDO: https://www.tinkercad.com/things/cnJvDRRiR7I
